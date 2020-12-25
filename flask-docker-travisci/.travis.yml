@@ -11,13 +11,6 @@ env:
     - COMPOSE_FILES="-f docker-compose.yml"
 
 before_install:
- - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
- - chmod +x docker-compose
- - sudo mv docker-compose /usr/local/bin
- - docker --version
- - docker-compose --version
-
+  - docker build -t name/aaa -f Docckerfile.dev .
 script:
-  - docker-compose ${COMPOSE_FILES} build
-  - docker-compose ${COMPOSE_FILES} up
-  
+  - docker run name/aaa
