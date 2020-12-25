@@ -12,7 +12,6 @@ class TestEndPoint(unittest.TestCase):
         print("Complete test")
     
     def test_sample_endpoint(self):
-        response = self.client.GET("/")
+        response = self.client.get("/")
 
         assert response.status_code == 200
-        self.assertEqual(response, 'Test')
