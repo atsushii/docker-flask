@@ -8,3 +8,12 @@ services:
       - "5000:5000"
     volumes:
       - '.:/app'
+    environment:
+    - FLASK_APP=run.py
+  tests:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - '.:/app'
+    command: ["bash", "test.sh"]
