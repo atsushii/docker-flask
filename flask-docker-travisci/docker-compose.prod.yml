@@ -5,5 +5,11 @@ services:
       context: .
       dockerfile: Dockerfile.prod
     command: bash entrypoint.sh
+    expose:
+      - 5000
+  nginx:
+    build: ./nginx
     ports:
-      - "5000:5000"
+      - 1337:80
+    depends_on:
+      - web
