@@ -15,3 +15,6 @@ class TestEndPoint(unittest.TestCase):
         response = self.client.get("/")
 
         assert response.status_code == 200
+
+if __name__ == "__main__":
+    unittest.main()
