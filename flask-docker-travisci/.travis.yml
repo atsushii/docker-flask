@@ -5,14 +5,4 @@ sudo: required
 services:
   - docker
 
-env:
-  global:
-    - DOCKER_COMPOSE_VERSION=1.25.5
-    - DOCKER_ENGINE_VERSION=19.03.8
-    - COMPOSE_FILES="-f docker-compose.yml"
-
-before_install:
-  - docker-compose ${COMPOSE_FILES} build
-script:
-  - docker-compose ${COMPOSE_FILES} up
   
