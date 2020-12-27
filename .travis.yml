@@ -8,6 +8,7 @@ env:
     - DOCKER_COMPOSE_VERSION=1.25.5
     - DOCKER_ENGINE_VERSION=19.03.8
     - COMPOSE_FILES="-f flask-docker-travisci/docker-compose.yml"
+    - TEST_CONTAINER_NAME="docker_flask_test" 
 
 before_install:
   - sudo rm /usr/local/bin/docker-compose
@@ -19,7 +20,7 @@ before_install:
 
 script:
   - docker-compose ${COMPOSE_FILES} build
-  - docker-compose ${COMPOSE_FILES} up
+  - docker-compose ${TEST_CONTAINER_NAME} up
 
 deploy:
   provider: elasticbeanstalk
@@ -31,6 +32,5 @@ deploy:
   on:
     branch: master
   access_key_id: $AWS_ACCESS_KEY
-  secret_access_key:
-    secure: $AWS_SECRET_KEY
+  secret_access_key: $AWS_SECRET_KEY
 
