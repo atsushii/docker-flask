@@ -22,14 +22,14 @@ before_install:
   - sudo mv docker-compose /usr/local/bin
   - docker --version
   - docker-compose --version
-  - docker-compose build ${DOCKER_FILE_TEST} .
+  - docker-compose ${DOCKER_FILE_TEST} build
 
 # Run Test
 script:
   - docker-compose run tests
 
 after_success:
-  - docker-compose build ${DOCKER_FILE_PROD_SERVER} .
+  - docker-compose ${DOCKER_FILE_PROD_SERVER} build
   # Log in to docker CLI
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
   # Push docker image
