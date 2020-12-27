@@ -1,22 +1,13 @@
-sudo: required
+language: ruby
 
 services:
   - docker
 
-env:
-  global:
-    - DOCKER_COMPOSE_VERSION: 1.25.5
-    - DOCKER_ENGINE_VERSION: 19.03.8
-
 before_install:
-  - sudo rm /usr/local/bin/docker-compose
-  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
-  - chmod +x docker-compose
-  - sudo mv docker-compose /usr/local/bin
-  - docker --version
-  - docker-compose --version
+- docker pull carlad/sinatra
+- docker run -d -p 127.0.0.1:80:4567 carlad/sinatra /bin/sh -c "cd /root/sinatra; bundle exec foreman start;"
+- docker ps -a
+- docker run carlad/sinatra /bin/sh -c "cd /root/sinatra; bundle exec rake test"
 
 script:
-  - docker-compose -f docker-compose.yml build
-  - docker-compose -f docker-compose.yml up
-  
+- bundle exec rake test
