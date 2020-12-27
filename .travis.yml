@@ -22,15 +22,15 @@ before_install:
   # - sudo mv docker-compose /usr/local/bin
   # - docker --version
   # - docker-compose --version
-  - docker build -t ${TEST_IMAGE_NAME} ${DOCKER_FILE_TEST} ./flask-docker-travisci
+  - docker build -t ${TEST_IMAGE_NAME} ${DOCKER_FILE_TEST} .
 
 # Run Test
 script:
   - docker run -t ${TEST_IMAGE_NAME} bash test.sh
 
 after_success:
-  - docker build -t ${PROD_SERVER_IMAGE_NAME} ${DOCKER_FILE_PROD_SERVER} ./flask-docker-travisci
-  - docker build -t ${PROD_NGINX_IMAGE_NAME} ${DOCKER_FILE_PROD_NGINX} ./flask-docker-travisci
+  - docker build -t ${PROD_SERVER_IMAGE_NAME} ${DOCKER_FILE_PROD_SERVER} .
+  - docker build -t ${PROD_NGINX_IMAGE_NAME} ${DOCKER_FILE_PROD_NGINX} .
   # Log in to docker CLI
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
   # Push docker image
