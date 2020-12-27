@@ -6,11 +6,9 @@ services:
 env:
   global:
     - DOCKER_COMPOSE_VERSION=1.25.5
-    - TEST_IMAGE_NAME="atsushiiii/docker-flask"
-    - PROD_SERVER_IMAGE_NAME="atsushiiii/multi-server"
-    - PROD_NGINX_IMAGE_NAME="atsushiiii/multi-nginx"
+    - PROD_SERVER_SERVICE="web"
+    - PROD_NGINX_SERVICE="nginx"
     - DOCKER_FILE_PROD_SERVER="-f flask-docker-travisci/docker-compose.prod.yml"
-    # - DOCKER_FILE_PROD_NGINX="-f flask-docker-travisci/nginx/Dockerfile"
     - DOCKER_FILE_TEST="-f flask-docker-travisci/docker-compose.yml"
 
 # Build testing container
@@ -33,8 +31,8 @@ after_success:
   # Log in to docker CLI
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
   # Push docker image
-  - docker-compose ${DOCKER_FILE_PROD_SERVER} push web
-  - docker-compose ${DOCKER_FILE_PROD_SERVER} push nginx
+  - docker-compose ${DOCKER_FILE_PROD_SERVER} push ${PROD_SERVER_SERVICE}
+  - docker-compose ${DOCKER_FILE_PROD_SERVER} push ${PROD_NGINX_SERVICE}
   
 
 # deploy:
