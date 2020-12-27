@@ -33,8 +33,8 @@ after_success:
   # Log in to docker CLI
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
   # Push docker image
-  - docker push web
-  - docker push nginx
+  - docker-compose push web
+  - docker-compose push nginx
   
 
 # deploy:
