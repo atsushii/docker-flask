@@ -9,33 +9,32 @@ env:
     - TEST_IMAGE_NAME="atsushiiii/docker-flask"
     - PROD_SERVER_IMAGE_NAME="atsushiiii/multi-server"
     - PROD_NGINX_IMAGE_NAME="atsushiiii/multi-nginx"
-    - DOCKER_FILE_PROD_SERVER="-f flask-docker-travisci/Dockerfile.prod"
+    - DOCKER_FILE_PROD_SERVER="-f flask-docker-travisci/docker-compose.prod.yml"
     - DOCKER_FILE_PROD_NGINX="-f flask-docker-travisci/nginx/Dockerfile"
-    - DOCKER_FILE_TEST="-f flask-docker-travisci/Dockerfile.dev"
+    - DOCKER_FILE_TEST="-f flask-docker-travisci/docker-compose.yml"
 
 # Build testing container
 before_install:
   # Install docker-compose
-  # - sudo rm /usr/local/bin/docker-compose
-  # - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
-  # - chmod +x docker-compose
-  # - sudo mv docker-compose /usr/local/bin
-  # - docker --version
-  # - docker-compose --version
-  - docker build -t ${TEST_IMAGE_NAME} ${DOCKER_FILE_TEST} .
+  - sudo rm /usr/local/bin/docker-compose
+  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - chmod +x docker-compose
+  - sudo mv docker-compose /usr/local/bin
+  - docker --version
+  - docker-compose --version
+  - docker-compose build ${DOCKER_FILE_TEST} .
 
 # Run Test
 script:
-  - docker run -t ${TEST_IMAGE_NAME} bash test.sh
+  - docker-compose run tests
 
 after_success:
-  - docker build -t ${PROD_SERVER_IMAGE_NAME} ${DOCKER_FILE_PROD_SERVER} .
-  - docker build -t ${PROD_NGINX_IMAGE_NAME} ${DOCKER_FILE_PROD_NGINX} .
+  - docker-compose build ${DOCKER_FILE_PROD_SERVER} .
   # Log in to docker CLI
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
   # Push docker image
-  - docker push ${PROD_SERVER_IMAGE_NAME}
-  - docker push ${PROD_NGINX_IMAGE_NAME}
+  - docker push web
+  - docker push nginx
   
 
 # deploy:
