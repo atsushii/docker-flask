@@ -6,9 +6,9 @@ services:
 env:
   global:
     - DOCKER_COMPOSE_VERSION=1.25.5
-    - TEST_IMAGE_NAME="atushiiii/docker-flask"
-    - PROD_SERVER_IMAGE_NAME="atushiiii/multi-server"
-    - PROD_NGINX_IMAGE_NAME="atushiiii/multi-nginx"
+    - TEST_IMAGE_NAME="atsushiiii/docker-flask"
+    - PROD_SERVER_IMAGE_NAME="atsushiiii/multi-server"
+    - PROD_NGINX_IMAGE_NAME="atsushiiii/multi-nginx"
     - DOCKER_FILE_PROD_SERVER="-f flask-docker-travisci/Dockerfile.prod"
     - DOCKER_FILE_PROD_NGINX="-f flask-docker-travisci/nginx/Dockerfile"
     - DOCKER_FILE_TEST="-f flask-docker-travisci/Dockerfile.dev"
