@@ -1,6 +1,7 @@
 version: '3'
 services:
   web:
+    image: atsushiiii/multi-server
     build:
       context: .
       dockerfile: Dockerfile.prod
@@ -8,6 +9,7 @@ services:
     expose:
       - 5000
   nginx:
+    image: atsushiiii/multi-nginx
     build: ./nginx
     ports:
       - 1337:80
