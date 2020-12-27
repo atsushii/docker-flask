@@ -10,7 +10,7 @@ env:
     - PROD_SERVER_IMAGE_NAME="atsushiiii/multi-server"
     - PROD_NGINX_IMAGE_NAME="atsushiiii/multi-nginx"
     - DOCKER_FILE_PROD_SERVER="-f flask-docker-travisci/docker-compose.prod.yml"
-    - DOCKER_FILE_PROD_NGINX="-f flask-docker-travisci/nginx/Dockerfile"
+    # - DOCKER_FILE_PROD_NGINX="-f flask-docker-travisci/nginx/Dockerfile"
     - DOCKER_FILE_TEST="-f flask-docker-travisci/docker-compose.yml"
 
 # Build testing container
