@@ -21,13 +21,16 @@ script:
   - docker-compose ${COMPOSE_FILES} build
   - docker-compose ${COMPOSE_FILES} up
 
-# deploy:
-#   provider: elasticbeanstalk
-#   region: "us-east-2"
-#   app: "docker-flask"
-#   env: "DockerFlask-env"
-#   bucket_name: elasticbeanstalk-us-east-2-186648681830
-#   backet_path: "docker-flask"
-#   on:
-#     branch: master
-  
+deploy:
+  provider: elasticbeanstalk
+  region: "us-east-2"
+  app: "docker-flask"
+  env: "DockerFlask-env"
+  bucket_name: elasticbeanstalk-us-east-2-186648681830
+  backet_path: "docker-flask"
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key:
+    secure: $AWS_SECRET_KEY
+
