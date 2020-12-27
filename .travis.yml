@@ -6,9 +6,14 @@ services:
 env:
   global:
     - DOCKER_COMPOSE_VERSION=1.25.5
-    - IMAGE_NAME="atushiii/docker-flask"
+    - TEST_IMAGE_NAME="atushiiii/docker-flask"
+    - PROD_SERVER_IMAGE_NAME="atushiiii/multi-server"
+    - PROD_NGINX_IMAGE_NAME="atushiiii/multi-nginx"
+    - DOCKER_FILE_PROD_SERVER="-f flask-docker-travisci/Dockerfile.prod"
+    - DOCKER_FILE_PROD_NGINX="-f flask-docker-travisci/nginx/Dockerfile"
     - DOCKER_FILE_TEST="-f flask-docker-travisci/Dockerfile.dev"
 
+# Build testing container
 before_install:
   # Install docker-compose
   # - sudo rm /usr/local/bin/docker-compose
@@ -17,20 +22,31 @@ before_install:
   # - sudo mv docker-compose /usr/local/bin
   # - docker --version
   # - docker-compose --version
-  - docker build -t ${IMAGE_NAME} ${DOCKER_FILE_TEST} .
+  - docker build -t ${TEST_IMAGE_NAME} ${DOCKER_FILE_TEST} ./flask-docker-travisci
 
+# Run Test
 script:
-  - docker run -t ${IMAGE_NAME} bash test.sh
+  - docker run -t ${TEST_IMAGE_NAME} bash test.sh
 
-deploy:
-  provider: elasticbeanstalk
-  region: "us-east-2"
-  app: "docker-flask"
-  env: "DockerFlask-env"
-  bucket_name: elasticbeanstalk-us-east-2-186648681830
-  backet_path: "docker-flask"
-  on:
-    branch: master
-  access_key_id: $AWS_ACCESS_KEY
-  secret_access_key: $AWS_SECRET_KEY
+after_success:
+  - docker build -t ${PROD_SERVER_IMAGE_NAME} ${DOCKER_FILE_PROD_SERVER} ./flask-docker-travisci
+  - docker build -t ${PROD_NGINX_IMAGE_NAME} ${DOCKER_FILE_PROD_NGINX} ./flask-docker-travisci
+  # Log in to docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # Push docker image
+  - docker push ${PROD_SERVER_IMAGE_NAME}
+  - docker push ${PROD_NGINX_IMAGE_NAME}
+  
+
+# deploy:
+#   provider: elasticbeanstalk
+#   region: "us-east-2"
+#   app: "docker-flask"
+#   env: "DockerFlask-env"
+#   bucket_name: elasticbeanstalk-us-east-2-186648681830
+#   backet_path: "docker-flask"
+#   on:
+#     branch: master
+#   access_key_id: $AWS_ACCESS_KEY
+#   secret_access_key: $AWS_SECRET_KEY
 
