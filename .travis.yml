@@ -26,7 +26,7 @@ before_install:
 
 # Run Test
 script:
-  - docker-compose run tests
+  - docker-compose ${DOCKER_FILE_TEST} run tests
 
 after_success:
   - docker-compose ${DOCKER_FILE_PROD_SERVER} build
