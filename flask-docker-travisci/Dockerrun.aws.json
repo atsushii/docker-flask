@@ -1,0 +1,25 @@
+{
+    "AWSEBDockerVersion": 2,
+    "containerDefinitions": [
+        {
+            "name": "server",
+            "image": "atsushiiii/multi-server",
+            "hostname": "web",
+            "essential": false
+        },
+        {
+            "name": "nginx",
+            "image": "atsushiiii/multi-nginx",
+            "hostname": "nginx",
+            "essential": true,
+            "postMappings": [
+                {
+                    "hostport": 80,
+                    "containerPort": 80
+
+                }
+            ],
+            "links": ["server"]
+        }
+    ]
+}
