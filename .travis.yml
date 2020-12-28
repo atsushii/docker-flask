@@ -27,6 +27,7 @@ script:
   - docker-compose ${DOCKER_FILE_TEST} run tests
 
 after_success:
+  # Build produciton images
   - docker-compose ${DOCKER_FILE_PROD_SERVER} build
   # Log in to docker CLI
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
