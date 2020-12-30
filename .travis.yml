@@ -36,15 +36,15 @@ after_success:
   - docker-compose ${DOCKER_FILE_PROD_SERVER} push ${PROD_NGINX_SERVICE}
   
 
-# deploy:
-#   provider: elasticbeanstalk
-#   region: "us-east-2"
-#   app: "docker-flask"
-#   env: "DockerFlask-env"
-#   bucket_name: elasticbeanstalk-us-east-2-186648681830
-#   backet_path: "docker-flask"
-#   on:
-#     branch: master
-#   access_key_id: $AWS_ACCESS_KEY
-#   secret_access_key: $AWS_SECRET_KEY
+deploy:
+  provider: elasticbeanstalk
+  region: "us-east-2"
+  app: "docker-flask"
+  env: "DockerFlask-env"
+  bucket_name: elasticbeanstalk-us-east-2-186648681830
+  backet_path: "docker-flask"
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
 
