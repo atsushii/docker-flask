@@ -9,6 +9,7 @@ services:
     expose:
       - 5000
   nginx:
+    restart: always
     image: atsushiiii/multi-nginx
     build: ./nginx
     ports:
