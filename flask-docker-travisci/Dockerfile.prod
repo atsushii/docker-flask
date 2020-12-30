@@ -32,5 +32,5 @@ COPY . /home/app/web
 
 EXPOSE 5000
 
-CMD [ "bash", "entrypoint.sh" ]
+CMD [ "bash", "/home/app/web/entrypoint.sh" ]
 
