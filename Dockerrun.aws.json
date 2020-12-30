@@ -13,7 +13,7 @@
             "image": "atsushiiii/multi-nginx",
             "hostname": "nginx",
             "essential": true,
-            "postMappings": [
+            "portMappings": [
                 {
                     "hostport": 80,
                     "containerPort": 80
