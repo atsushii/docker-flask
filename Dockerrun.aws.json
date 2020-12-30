@@ -6,7 +6,7 @@
             "image": "atsushiiii/multi-server",
             "hostname": "web",
             "essential": false,
-            "memory": 64
+            "memory": 128
         },
         {
             "name": "nginx",
@@ -20,7 +20,7 @@
                 }
             ],
             "links": ["web"],
-            "memory": 64
+            "memory": 128
         }
     ]
 }
