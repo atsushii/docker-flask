@@ -5,7 +5,8 @@
             "name": "server",
             "image": "atsushiiii/multi-server",
             "hostname": "web",
-            "essential": false
+            "essential": false,
+            "memory": 64
         },
         {
             "name": "nginx",
@@ -18,7 +19,8 @@
                     "containerPort": 80
                 }
             ],
-            "links": ["server"]
+            "links": ["server"],
+            "memory": 64
         }
     ]
 }
