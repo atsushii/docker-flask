@@ -15,7 +15,6 @@ env:
 
 # Build testing container
 before_install:
-  # encrypt file for gcp
   - openssl aes-256-cbc -K $encrypted_4e0362780863_key -iv $encrypted_4e0362780863_iv -in multi-k8s-300520-c91cd2947bb4.json.enc -out multi-k8s-300520-c91cd2947bb4.json -d
   # install gcloud
   - curl https://sdk.cloud.google.com | bash > /dev/null;
