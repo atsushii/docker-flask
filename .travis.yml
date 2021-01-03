@@ -5,14 +5,29 @@ services:
 
 env:
   global:
+    - SHA=$(git rev-parse HEAD)
+    - CLOUDSDK_CORE_DISABLE_PROMPTS=1
     - DOCKER_COMPOSE_VERSION=1.25.5
     - PROD_SERVER_SERVICE="web"
     - PROD_NGINX_SERVICE="nginx"
-    - DOCKER_FILE_PROD_SERVER="-f flask-docker-travisci/docker-compose.prod.yml"
-    - DOCKER_FILE_TEST="-f flask-docker-travisci/docker-compose.yml"
+    - DOCKER_FILE_PROD_SERVER="-f flask-docker-travisci-ks8/docker-compose.prod.yml"
+    - DOCKER_FILE_TEST="-f flask-docker-travisci-ks8/docker-compose.yml"
 
 # Build testing container
 before_install:
+  # encrypt file for gcp
+  - openssl aes-256-cbc -K $encrypted_4e0362780863_key -iv $encrypted_4e0362780863_iv -in multi-k8s-300520-c91cd2947bb4.json.enc -out multi-k8s-300520-c91cd2947bb4.json -d
+  # install gcloud
+  - curl https://sdk.cloud.google.com | bash > /dev/null;
+  - source $HOME/google-cloud-sdk/path.bash.inc
+  # use k8s
+  - gcloud components update kubectl
+  - gcloud auth activate-service-account --key-file multi-k8s-300520-c91cd2947bb4.json
+  - gcloud config set project multi-k8s-300520
+  - gcloud config set compute/zone us-central1-c
+  - gcloud container clusters get-credentials multi-k8s
+  # Log in to docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
   # Install docker-compose
   - sudo rm /usr/local/bin/docker-compose
   - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
@@ -26,25 +41,32 @@ before_install:
 script:
   - docker-compose ${DOCKER_FILE_TEST} run tests
 
-after_success:
-  # Build produciton images
-  - docker-compose ${DOCKER_FILE_PROD_SERVER} build
-  # Log in to docker CLI
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
-  # Push docker image
-  - docker-compose ${DOCKER_FILE_PROD_SERVER} push ${PROD_SERVER_SERVICE}
-  - docker-compose ${DOCKER_FILE_PROD_SERVER} push ${PROD_NGINX_SERVICE}
+# ------ without k8s ----------
+# after_success:
+#   # Build produciton images
+#   - docker-compose ${DOCKER_FILE_PROD_SERVER} build
+#   # Log in to docker CLI
+#   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+#   # Push docker image
+#   - docker-compose ${DOCKER_FILE_PROD_SERVER} push ${PROD_SERVER_SERVICE}
+#   - docker-compose ${DOCKER_FILE_PROD_SERVER} push ${PROD_NGINX_SERVICE}
   
 
+# deploy:
+#   provider: elasticbeanstalk
+#   region: "us-east-2"
+#   app: "docker-flask"
+#   env: "DockerFlask-env"
+#   bucket_name: elasticbeanstalk-us-east-2-186648681830
+#   backet_path: "docker-flask"
+#   on:
+#     branch: master
+#   access_key_id: $AWS_ACCESS_KEY
+#   secret_access_key: $AWS_SECRET_KEY
+
+# ------ use k8s ----------
 deploy:
-  provider: elasticbeanstalk
-  region: "us-east-2"
-  app: "docker-flask"
-  env: "DockerFlask-env"
-  bucket_name: elasticbeanstalk-us-east-2-186648681830
-  backet_path: "docker-flask"
+  provider: script
+  script: bash ./deploy.sh
   on:
     branch: master
-  access_key_id: $AWS_ACCESS_KEY
-  secret_access_key: $AWS_SECRET_KEY
-
